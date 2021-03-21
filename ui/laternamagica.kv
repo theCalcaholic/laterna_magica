@@ -1,0 +1,210 @@
+<RootWidget>:
+  orientation: 'vertical'
+  MainMenu:
+    size_hint: 1, None
+    height: '28px'
+  GridLayout:
+    cols: 2
+    rows: 1
+    size_hint: 1, 1
+    CamEditor:
+      id: cam_editor
+      size_hint: 1, 1
+    VCamOutputTransform:
+      id: vcam
+      size_hint: 0.3, None
+
+<MainMenu>:
+  Button:
+    text: "File"
+  Button:
+    text: "Edit"
+  Button:
+    text: "Quit"
+
+
+<CamEditor>:
+  padding: 10
+  spacing: 5
+  orientation: 'tb-lr'
+
+  canvas.before:
+    Color:
+      rgba: 0, 0, 0.1, 1
+    Rectangle:
+      pos: self.pos
+      size: self.size
+
+  CameraSource:
+    id: camera_source
+
+  Button:
+    text: "Add"
+    on_release:
+      root.add_transform()
+    height: 10
+    size_hint: 0.15, 0.1
+
+<SimpleTransform>:
+  orientation: 'vertical'
+  height: '100px'
+  width: '100px'
+  padding: '2px'
+  spacing: '2px'
+  size_hint: 0.2, 0.2
+  transform_selection: transform_selection.__self__
+  canvas.before:
+    Color:
+      rgba: 0.4, 0, 0, 1
+    Rectangle:
+      size: self.size
+      pos: self.pos
+  Image:
+    id: preview
+    size: self.texture_size
+    pos: 0,0
+    width: '92px'
+    #pos: root.center_x - self.size[0]/2, root.center_y - self.size[1]/2
+    size_hint: 1, 1
+
+  Button:
+    id: transform_selection_toggle
+    text: 'Select an Effect'
+    on_release: transform_selection.open(root)
+    on_parent: transform_selection.dismiss()
+    height: 20
+    position_hint: { 'center_x': 1 }
+    font_size: 12
+    size_hint: None, None
+  DropDown:
+    id: transform_selection
+    size_hint: None, None
+
+    canvas.before:
+      Color:
+        rgba: 0.6, 0.6, 0.6, 0.8
+      Rectangle:
+        size: self.size
+        pos: self.pos
+#    Label:
+#      text: "- Nothing Selected -"
+#      size_hint: None, None
+#      font_size: 12
+#      color: 0, 0, 0, 1
+#      halign: 'center'
+#      size: camera_selection.size[0], self.texture_size[1]
+
+
+<Icon>:
+  size_hint: 0.2, 0.1
+  Image:
+    source: root.img_source
+
+<ObservableCameraTransform>:
+
+<CameraSource>:
+  id: source_cam_container
+  orientation: 'vertical'
+  padding: '2px'
+  spacing: '2px'
+  height: '120px'
+  width: '100px'
+  size_hint: 0.2, 0.2
+  camera_selection: camera_selection.__self__
+
+  canvas.before:
+    Color:
+      rgba: 0, 0.4, 0, 1
+    Rectangle:
+      size: self.size
+      pos: self.pos
+  ObservableCameraTransform:
+    id: cam
+    #pos: source_cam_container.center_x - self.size[0]/2, source_cam_container.center_y - self.size[1]/2
+    index: 0
+    size_hint: 1, 1
+
+
+  Button:
+    text: 'Select a Camera'
+    on_release: camera_selection.open(source_cam_container)
+    on_parent: camera_selection.dismiss()
+    height: 20
+    position_hint: { 'center_x': 1 }
+    font_size: 12
+    size_hint: None, None
+  DropDown:
+    id: camera_selection
+    size_hint: None, None
+    canvas.before:
+      Color:
+        rgba: 0.6, 0.6, 0.6, 0.8
+      Rectangle:
+        size: self.size
+        pos: self.pos
+    Label:
+      text: "- No cameras found -"
+      size_hint: None, None
+      font_size: 12
+      color: 0, 0, 0, 1
+      halign: 'center'
+      size: camera_selection.size[0], self.texture_size[1]
+
+<VCamOutputTransform>:
+  id: source_cam_container
+  orientation: 'vertical'
+  padding: '2px'
+  spacing: '2px'
+  height: '140px'
+  width: '100px'
+  size_hint: 0.2, 0.2
+  camera_selection: camera_selection.__self__
+
+  canvas.before:
+    Color:
+      rgba: 0, 0.7, 1, 1
+    Rectangle:
+      size: self.size
+      pos: self.pos
+
+  Label:
+    text: 'Output:'
+    size_hint: None, None
+    height: '20px'
+
+
+  Image:
+    id: preview
+
+  Button:
+    text: 'Select a Camera'
+    on_release: camera_selection.open(source_cam_container)
+    on_parent: camera_selection.dismiss()
+    height: 20
+    position_hint: { 'center_x': 1 }
+    font_size: 12
+    size_hint: None, None
+  DropDown:
+    id: camera_selection
+    size_hint: None, None
+    canvas.before:
+      Color:
+        rgba: 0.6, 0.6, 0.6, 0.8
+      Rectangle:
+        size: self.size
+        pos: self.pos
+    Label:
+      text: "- No cameras found -"
+      size_hint: None, None
+      font_size: 12
+      color: 0, 0, 0, 1
+      halign: 'center'
+      size: camera_selection.size[0], self.texture_size[1]
+    Button:
+      text: 'video10'
+      on_release: camera_selection.select(10)
+      size_hint: None, None
+      height: '20px'
+      font_size: 12
+
+
