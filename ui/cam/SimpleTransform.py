@@ -5,7 +5,7 @@ from kivy.graphics.texture import Texture, TextureRegion
 from kivy.uix.boxlayout import BoxLayout
 from .ObservableTransform import ObservableTransform
 from .TransformObserver import TransformObserver
-from .ObservableCameraTransform import ObservableCamera
+from .ObservableCamera import ObservableCamera
 from typing import Union, Callable, Dict
 
 
@@ -13,10 +13,10 @@ class SimpleTransform(BoxLayout, TransformObserver):
 
     selected_transform = StringProperty()
 
-    def __init__(self, source: Union[ObservableTransform, ObservableCamera], **kwargs):
+    def __init__(self, source: Union[ObservableTransform, ObservableCamera]=None, **kwargs):
         self.transform_fns: Dict[
             str, Callable[[Union[Texture, TextureRegion]], Union[Texture, TextureRegion]]] = {
-            'none': ObservableTransform.generic_transform,
+            'none': None,
             'mirror': SimpleTransform.mirror_transform,
             'flip': SimpleTransform.flip_transform
         }
@@ -26,7 +26,7 @@ class SimpleTransform(BoxLayout, TransformObserver):
         self.selected_transform = 'none'
 
         super().__init__(**kwargs)
-        self.set_source(source)
+        #self.set_source(source)
 
     def on_kv_post(self, base_widget):
         dropdown = self.ids['transform_selection']

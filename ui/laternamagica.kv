@@ -35,7 +35,7 @@
       pos: self.pos
       size: self.size
 
-  CameraSource:
+  CameraSourceView:
     id: camera_source
 
   Button:
@@ -49,7 +49,6 @@
   orientation: 'vertical'
   height: '100px'
   width: '100px'
-  padding: '2px'
   spacing: '2px'
   size_hint: 0.2, 0.2
   transform_selection: transform_selection.__self__
@@ -100,10 +99,7 @@
   Image:
     source: root.img_source
 
-<ObservableCameraTransform>:
-
-<CameraSource>:
-  id: source_cam_container
+<CameraSourceView>:
   orientation: 'vertical'
   padding: '2px'
   spacing: '2px'
@@ -118,40 +114,17 @@
     Rectangle:
       size: self.size
       pos: self.pos
-  ObservableCameraTransform:
-    id: cam
-    #pos: source_cam_container.center_x - self.size[0]/2, source_cam_container.center_y - self.size[1]/2
-    index: 0
-    size_hint: 1, 1
 
-
-  Button:
-    text: 'Select a Camera'
-    on_release: camera_selection.open(source_cam_container)
-    on_parent: camera_selection.dismiss()
-    height: 20
-    position_hint: { 'center_x': 1 }
-    font_size: 12
+  Image:
+    id: camera_preview
     size_hint: None, None
-  DropDown:
+
+  DropDownView:
     id: camera_selection
-    size_hint: None, None
-    canvas.before:
-      Color:
-        rgba: 0.6, 0.6, 0.6, 0.8
-      Rectangle:
-        size: self.size
-        pos: self.pos
-    Label:
-      text: "- No cameras found -"
-      size_hint: None, None
-      font_size: 12
-      color: 0, 0, 0, 1
-      halign: 'center'
-      size: camera_selection.size[0], self.texture_size[1]
+    dd_title: 'Select Input Camera'
+    dd_placeholder: '-- no camera found --'
 
 <VCamOutputTransform>:
-  id: source_cam_container
   orientation: 'vertical'
   padding: '2px'
   spacing: '2px'
@@ -176,16 +149,43 @@
   Image:
     id: preview
 
+  DropDownView:
+    id: camera_selection
+    dd_title: 'Select Virtual Cam'
+    dd_placeholder: '-- no camera found --'
+
+<TransformView>:
+  orientation: 'vertical'
+  height: '150px'
+  width: '100px'
+  padding: '2px'
+  spacing: '2px'
+  size_hint: 0.3, 0.3
+
+  DropDownView:
+    id: transform_type_dropdown
+    size_hint: None, None
+    dd_title: 'Select Type'
+    dd_placeholder: '-- unavailable --'
+
+<DropDownView>:
+  dd_title: 'Select'
+  dd_placeholder: '-- nothing here --'
+  dd_replace_title: True
+  placeholder_label: placeholder_label.__self__
+  spacing: '2px'
   Button:
-    text: 'Select a Camera'
-    on_release: camera_selection.open(source_cam_container)
-    on_parent: camera_selection.dismiss()
+    id: toggle_button
+    text: root.dd_title
+    on_release: dropdown.open(root)
+    on_parent: dropdown.dismiss()
     height: 20
     position_hint: { 'center_x': 1 }
     font_size: 12
     size_hint: None, None
+    size: root.size[0], self.texture_size[1]
   DropDown:
-    id: camera_selection
+    id: dropdown
     size_hint: None, None
     canvas.before:
       Color:
@@ -194,17 +194,10 @@
         size: self.size
         pos: self.pos
     Label:
-      text: "- No cameras found -"
+      id: placeholder_label
+      text: root.dd_placeholder
       size_hint: None, None
       font_size: 12
       color: 0, 0, 0, 1
       halign: 'center'
-      size: camera_selection.size[0], self.texture_size[1]
-    Button:
-      text: 'video10'
-      on_release: camera_selection.select(10)
-      size_hint: None, None
-      height: '20px'
-      font_size: 12
-
-
+      size: dropdown.size[0], self.texture_size[1]

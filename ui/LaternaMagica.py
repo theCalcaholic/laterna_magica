@@ -2,8 +2,9 @@ from kivy import require
 from kivy.app import App
 from .RootWidget import RootWidget
 from .MainMenu import MainMenu
-from .cam.CamEditor import CamEditor as CamEditor
-from .cam.VCamOutputTransform import VCamOutputTransform
+from ui.cam.CamEditor import CamEditor as CamEditor
+from ui.cam.VCamOutputTransform import VCamOutputTransform
+from ui.cam.DropDownView import DropDownView
 
 require('2.0.0')
 
