@@ -6,6 +6,9 @@ from kivy.properties import NumericProperty, ListProperty
 from kivy.core.camera import CameraBase
 import numpy as np
 import cv2
+from v4l2ctl import V4l2Device, V4l2Capabilities
+from pathlib import Path
+import re
 
 
 class CameraSource(LinkedTransform):
@@ -16,16 +19,27 @@ class CameraSource(LinkedTransform):
     __events__ = ('on_camera_loaded',)
 
     @classmethod
-    def find_available_cameras(cls, max_id: int = 20) -> List[int]:
+    def find_available_cameras(cls, max_id: int = 20, capabilitiy = V4l2Capabilities.VIDEO_CAPTURE) -> List[int]:
+
+        print('listing v4l devices')
+        devices = V4l2Device.iter_devices(skip_links=True)
         ids = []
-        for cam_id in range(0, max_id):
-            cam = cls.load_camera(cam_id)
-            if cam is not None:
-                ids.append(cam_id)
+        for device in devices:
+            if capabilitiy in device.capabilities:
+                ids.append(int(re.match(r'/dev/video(\d+)', str(device.device)).group(1)))
+
+        # for cam_id in range(0, max_id):
+        #     cam = cls.load_camera(cam_id)
+        #     if cam is not None:
+        #         ids.append(cam_id)
         return ids
 
     @classmethod
     def load_camera(cls, index: int, stopped: bool = True) -> Union[CameraBase, None]:
+
+        if not Path(f'/dev/video{index}').exists():
+            return None
+
         try:
             return CoreCamera(index=index, stopped=stopped)
         # Broad except clause is necessary, because we can't really discern between different meaningful exceptions
@@ -47,6 +61,9 @@ class CameraSource(LinkedTransform):
         if index < 0:
             return
         self._cam = self.__class__.load_camera(index)
+        if self._cam is None:
+            print(f'ERROR: Could not load camera with index {index}')
+            return
         self._cam.bind(on_load=lambda *args: self.dispatch('on_camera_loaded'))
         self._cam.start()
         self._cam.bind(on_texture=self.on_camera_frame)

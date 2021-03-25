@@ -3,6 +3,7 @@ from kivy.properties import ListProperty
 from ui.nodes.ImageSourceView import ImageSourceView
 from ui.nodes.ToggleablePreviewView import ToggleablePreviewView
 from ui.nodes.CameraSourceView import CameraSourceNode
+from ui.nodes.VCamSinkView import VCamSinkView
 from ui.nodes.NodeView import NodeView
 from typing import List
 
@@ -12,7 +13,8 @@ class TransformationGraph:
     TRANSFORM_TYPES = {
         'image': lambda name: ImageSourceView(name=name),
         'preview': lambda name: ToggleablePreviewView(name=name),
-        'camera source': lambda name: CameraSourceNode(name=name)
+        'camera source': lambda name: CameraSourceNode(name=name),
+        'virtual camera sink': lambda name: VCamSinkView(name=name),
     }
 
     camera_resolution = ListProperty([0, 0])

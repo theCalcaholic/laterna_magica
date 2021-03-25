@@ -17,7 +17,7 @@ class VCamOutputTransform(ObservableTransform, BoxLayout, TransformObserver):
     resolution = ObjectProperty()
 
     def __init__(self, *args, **kwargs):
-        self.vcam: FakeWebcam = None
+        self.vcam: Union[FakeWebcam, None] = None
         super().__init__(*args, **kwargs)
 
     def on_kv_post(self, base_widget):
