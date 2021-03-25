@@ -1,0 +1,19 @@
+<PreviewView>:
+
+  orientation: 'vertical'
+  padding: '6px'
+  spacing: '2px'
+#  height: '180px'
+#  width: '100px'
+  size_hint: 1, 1
+
+  canvas.before:
+    Color:
+      rgba: 0, 0.2, 0, 0.5
+    Rectangle:
+      size: self.size
+      pos: self.pos
+
+  Image:
+    id: preview
+    size_hint: 1, 1

@@ -1,0 +1,10 @@
+<ToggleablePreviewView>:
+  active: True
+  Button:
+    size_hint: None, None
+    height: 18
+    width: 22
+    font_size: 12
+    pos_hing: {'right': 1}
+    text: 'on' if root.active else 'off'
+    on_release: root.active = not root.active

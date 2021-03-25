@@ -26,3 +26,4 @@ class CameraSourceNode(AbstractTransformNodeView, BoxLayout):
         for cam_id in self.available_cameras:
             dropdown.add_option(f'Camera No. {cam_id}', cam_id)
         dropdown.bind(on_select=lambda _, choice: setattr(self.transform, 'camera_index', choice))
+        dropdown.select(self.available_cameras[0])

@@ -2,14 +2,16 @@ from .LinkedTransform import LinkedTransform
 from typing import Union, List
 from kivy.core.camera import Camera as CoreCamera
 from kivy.graphics.texture import Texture
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, ListProperty
 from kivy.core.camera import CameraBase
 import numpy as np
+import cv2
 
 
 class CameraSource(LinkedTransform):
 
     camera_index = NumericProperty(defaultvalue=-1)
+    camera_resolution = ListProperty([0, 0])
 
     __events__ = ('on_camera_loaded',)
 
@@ -35,10 +37,10 @@ class CameraSource(LinkedTransform):
 
     def __init__(self, *args, **kwargs):
         self._cam: CoreCamera = None
-        self.resolution = [0, 0]
         self.frame = None
         self.bind(camera_index=self.on_index)
         super().__init__(*args, **kwargs)
+        self.input_channels = []
 
     def on_index(self, instance, index):
         self._cam = None
@@ -50,12 +52,16 @@ class CameraSource(LinkedTransform):
         self._cam.bind(on_texture=self.on_camera_frame)
 
     def on_camera_frame(self, *args):
-        self.frame = np.frombuffer(self._cam.texture.pixels, np.uint8)
-        self.receive_frame(self.frame)
+        frame = np.frombuffer(self._cam.texture.pixels, np.uint8)
+        frame = frame.reshape(self._cam.texture.height, self._cam.texture.width, 4)
+        self._frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2BGR)
+        # cv2.imshow('debug', self._frame)
+        # cv2.waitKey(30)
+        self.receive_frame(self)
 
     def on_camera_loaded(self):
         if self._cam.texture is not None:
-            self.resolution = list(self._cam.texture.size)
+            self.camera_resolution = list(self._cam.texture.size)
 
     def get_is_active(self) -> bool:
         return self._cam is not None and self._cam.play

@@ -20,24 +20,19 @@ class NodeEditorView(FloatLayout):
 
         super().__init__(**kwargs)
 
-    # def on_kv_post(self, base_widget):
-    #     self.ids['add_transform_dialog'].transform_options = self.transform_graph.TRANSFORM_TYPES.keys()
-    #     self.ids['add_transform_dialog'].bind(on_add_transform=self.add_transform)
-
     def on_kv_post(self, base_widget):
-        for identifier in ['node_view_1', 'node_view_2']:
-            self.nodes.append(self.ids[identifier])
-        for node in self.nodes:
-            node.bind(on_start_connect_nodes=self.on_start_connect_nodes)
-            node.bind(on_end_connect_nodes=self.on_end_connect_nodes)
-            node.bind(on_connection_established=self.on_connection_established)
+        self.ids['add_transform_dialog'].transform_options = self.transform_graph.TRANSFORM_TYPES.keys()
+        self.ids['add_transform_dialog'].bind(on_add_transform=self.add_transform)
 
     def add_transform(self, _, transform_type, name):
         node = self.transform_graph.add(transform_type, name)
+        self.nodes.append(node)
         self.add_widget(node)
+        node.bind(on_start_connect_nodes=self.on_start_connect_nodes)
+        node.bind(on_end_connect_nodes=self.on_end_connect_nodes)
+        node.bind(on_connection_established=self.on_connection_established)
 
     def show_add_node_dialog(self, *args):
-        print(args)
         print('Showing context menu...')
         self.ids['add_transform_dialog'].show()
 

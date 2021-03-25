@@ -20,7 +20,6 @@ class NodeConnectionHandles(BoxLayout):
 
     def on_kv_post(self, base_widget):
         assert self.connection_type is not None
-        self.add_handle()
 
     def add_handle(self) -> bool:
         if self.floating_handle is not None:

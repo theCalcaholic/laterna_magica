@@ -1,6 +1,6 @@
 <NodeView>:
-  height: '100px'
-  width: '100px'
+  height: '140px'
+  width: '200px'
   size_hint: None, None
 
   BoxLayout:
@@ -18,6 +18,8 @@
       connection_type: 'sink'
 
     BoxLayout:
+      id: child_container
+      name: 'test'
       orientation: 'vertical'
       size_hint: 1, 1
 
@@ -27,6 +29,12 @@
         Rectangle:
           size: self.size
           pos: self.pos
+
+      Label:
+        text: root.name
+        font_size: 12
+        height: 20
+        size_hint: 1, None
 
     NodeConnectionHandles:
       id: source_handles

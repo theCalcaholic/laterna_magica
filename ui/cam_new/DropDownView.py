@@ -35,7 +35,7 @@ class DropDownView(BoxLayout):
             return
         btn = Button(text=title, size_hint=(None, None), font_size=12,
                      color=(0, 0, 0, 1), halign='center', height=18)
-        btn.size = (self.size[0], 18)
+        btn.size = (self.width, 18)
         btn.value = value
         btn.bind(on_release=lambda *args: self.dropdown.select(value))
         self.dropdown.add_widget(btn)
