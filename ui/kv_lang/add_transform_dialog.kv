@@ -1,0 +1,58 @@
+<AddTransformDialog>:
+  visible: False
+  #pos_hint: {'center': 0}
+  spacing: 4
+  padding: 4
+  orientation: 'vertical'
+
+  canvas.before:
+    Color:
+      rgba: 0.1, 0.1, 0.1, 0.8
+    Rectangle:
+      size: self.size
+      pos: self.pos
+
+  Label:
+    size_hint: 1, 0.5
+    text: 'Add Node'
+    canvas.before:
+      Color:
+        rgba: 0.5, 0.1, 0.1, 0.8
+      Rectangle:
+        size: self.size
+        pos: self.pos
+  GridLayout:
+    cols: 2
+    rows: 6
+    spacing: 4
+
+    Label:
+      size_hint: 1, 0.1
+      text: 'Type: '
+      font_size: 12
+    DropDownView:
+      id: transform_type_dropdown
+      size_hint: 1, 0.1
+    Label:
+      font_size: 12
+      size_hint: 1, 0.1
+      size: 1, 1
+      text: 'Name: '
+    TextInput:
+      height: '20px'
+      size_hint: 1, 0.1
+      id: name_input
+      multiline: False
+      on_text_validate: root.validate_name(name_input.text)
+    Button:
+      size_hint: 1, 0.1
+      size: 1, 1
+      font_size: 12
+      text: 'Add'
+      on_release: root.confirm_dialog()
+    Button:
+      size_hint: 1, 0.1
+      size: 1, 1
+      font_size: 12
+      text: 'Cancel'
+      on_release: root.hide()

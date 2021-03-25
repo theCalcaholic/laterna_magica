@@ -1,0 +1,32 @@
+
+<NodeEditorView>:
+  padding: 10
+  rows: 3
+  cols: 3
+
+  canvas.before:
+    Color:
+      rgba: 0, 0, 0.1, 1
+    Rectangle:
+      pos: self.pos
+      size: self.size
+
+  Button:
+    text: 'Add Node'
+    on_release: root.show_add_node_dialog()
+    size_hint: 0.1, 0.1
+    pos_hint: { 'right': 1}
+
+  AddTransformDialog:
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    size_hint: 0.4, 0.4
+    id: add_transform_dialog
+    is_name_valid: root.validate_transform_name
+
+  NodeView:
+    id: node_view_1
+    center: root.center
+
+  NodeView:
+    id: node_view_2
+    center: root.center

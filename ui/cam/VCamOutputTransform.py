@@ -1,13 +1,15 @@
 from kivy.graphics.texture import Texture, TextureRegion
-from kivy.properties import NumericProperty, ObjectProperty
+from kivy.properties import NumericProperty, ObjectProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
 from .ObservableTransform import ObservableTransform
 from .TransformObserver import TransformObserver
 from pyfakewebcam import FakeWebcam
 from os import path
+from pathlib import Path
 from typing import Union
 import numpy as np
 import cv2
+import re
 
 
 class VCamOutputTransform(ObservableTransform, BoxLayout, TransformObserver):
@@ -22,11 +24,13 @@ class VCamOutputTransform(ObservableTransform, BoxLayout, TransformObserver):
         self.load_vcam()
         self.bind(vcam_id=self.load_vcam)
         self.bind(resolution=self.load_vcam)
-        self.ids['camera_selection'].bind(on_select=lambda _, i: setattr(self, 'vcam_id', i))
         self.preview = self.ids['preview']
+        self.ids['dropdown'].bind(on_select=lambda _, choice: setattr(self, 'vcam_id', choice))
+        self.fill_dropdown_menu()
 
     def load_vcam(self, *args):
 
+        print(f'Loading vcam {self.vcam_id}')
         if self.vcam_id == -1 or not path.exists(f'/dev/video{self.vcam_id}'):
             return
 
@@ -34,6 +38,7 @@ class VCamOutputTransform(ObservableTransform, BoxLayout, TransformObserver):
             return
 
         self.vcam = FakeWebcam(f'/dev/video{self.vcam_id}', *self.resolution)
+        print("virt cam is set up")
 
     def notify_new_frame(self, texture: Union[Texture, TextureRegion]):
         super(VCamOutputTransform, self).notify_new_frame(texture)
@@ -50,3 +55,13 @@ class VCamOutputTransform(ObservableTransform, BoxLayout, TransformObserver):
 
     def is_active(self) -> bool:
         return self._source is not None
+
+    def fill_dropdown_menu(self):
+        dropdown = self.ids['dropdown']
+        dropdown.clear()
+        dev_path = Path('/dev')
+        for file in dev_path.glob("video*"):
+            print(f'checking camera {file}')
+            cam_id = int(re.match(r'video(\d+)', file.name).group(1))
+            dropdown.add_option(f'Camera No. {cam_id}', cam_id)
+        dropdown.bind(on_select=lambda _, choice: setattr(self, 'vcam_id', choice))

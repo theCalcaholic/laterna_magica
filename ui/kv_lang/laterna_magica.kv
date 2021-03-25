@@ -1,0 +1,61 @@
+#:include ui/kv_lang/drop_down_view.kv
+#:include ui/kv_lang/node_editor_view.kv
+#:include ui/kv_lang/add_transform_dialog.kv
+#:include ui/kv_lang/image_source_view.kv
+#:include ui/kv_lang/camera_source_view.kv
+#:include ui/kv_lang/node_view.kv
+
+<RootWidget>:
+  orientation: 'vertical'
+  MainMenu:
+    size_hint: 1, None
+    height: '28px'
+
+
+  GridLayout:
+    cols: 2
+    rows: 1
+    size_hint: 1, 1
+
+    NodeEditorView:
+      id: node_editor
+      size_hint: 1, 1
+
+#    VCamOutputTransform:
+#      id: vcam
+#      size_hint: 0.3, None
+
+<MainMenu>:
+  Button:
+    text: "File"
+  Button:
+    text: "Edit"
+  Button:
+    text: "Quit"
+
+<TransformContainer>:
+  orientation: 'vertical'
+  padding: '2px'
+  spacing: '2px'
+  height: '140px'
+  width: '100px'
+  size_hint: 0.2, 0.2
+
+  canvas.before:
+    Color:
+      rgba: 0, 0.7, 1, 1
+    Rectangle:
+      size: self.size
+      pos: self.pos
+#
+#<NodeEditorContextMenu>:
+#  ContextMenuTextItem:
+#    text: "Add Node"
+#    ContextMenu:
+#      id: add_transform_menu
+
+<DragLabel>:
+  drag_rectangle: self.x, self.y, self.width, self.height
+  drag_timeout: 1000000
+  drag_distance: 1
+

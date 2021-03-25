@@ -1,4 +1,5 @@
 from .SimpleTransform import SimpleTransform
+from .CVTransformContainer import CVTransformContainer
 from kivy.uix.boxlayout import BoxLayout
 
 
@@ -9,7 +10,10 @@ class TransformView(BoxLayout):
     def __init__(self, index, **kwargs):
         self.index = index
         self.transform_view = None
-        self.transform_types = {'Simple': lambda: SimpleTransform()}
+        self.transform_types = {
+            'Simple': lambda: SimpleTransform(),
+            'Open CV': lambda: CVTransformContainer()
+        }
         super().__init__(**kwargs)
 
     def on_kv_post(self, base_widget):
@@ -20,7 +24,7 @@ class TransformView(BoxLayout):
         pass
 
     def activate(self, transform_registry):
-        source = transform_registry.register(self.index, self.transform_view.transform)
+        source = transform_registry.register(self.index, self.transform_view.transform_fn)
         self.transform_view.set_source(source)
 
     def load_transform(self, transform_type):
@@ -36,4 +40,4 @@ class TransformView(BoxLayout):
         for title, transform_type in self.transform_types.items():
             print(transform_type)
             dropdown.add_option(title, title)
-        dropdown.bind(on_select=lambda _, choice: self.load_transform(self.transform_types[title]))
+        dropdown.bind(on_select=lambda _, choice: self.load_transform(self.transform_types[choice]))

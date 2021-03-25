@@ -6,7 +6,7 @@ from kivy.event import EventDispatcher
 from kivy.core.camera import CameraBase
 from kivy.core.camera import Camera as CoreCamera
 from kivy.properties import NumericProperty
-from .ObservableTransform import ObservableTransform
+from ui.cam.ObservableTransform import ObservableTransform
 
 
 # class ObservableCamera(Camera):
@@ -38,7 +38,7 @@ class ObservableCamera(ObservableTransform):
     @classmethod
     def find_available_cameras(cls, max_id: int = 20) -> List[int]:
         ids = []
-        for cam_id in range(1, max_id):
+        for cam_id in range(0, max_id):
             cam = ObservableCamera.load_camera(cam_id)
             if cam is not None:
                 ids.append(cam_id)
@@ -54,16 +54,6 @@ class ObservableCamera(ObservableTransform):
         self._cam.start()
         self._cam.bind(on_texture=self.on_camera_frame)
 
-    @classmethod
-    def load_camera(cls, index: int, stopped: bool = True) -> CameraBase:
-        try:
-            return CoreCamera(index=index, stopped=stopped)
-        # Broad except clause is necessary, because we can't really discern between different meaningful exceptions
-        # (proper exceptions are not implemented by kivy.core.camera)
-        except:
-            pass
-
-        return None
 
     def on_camera_frame(self, *args):
         self.on_new_frame(self._cam.texture)

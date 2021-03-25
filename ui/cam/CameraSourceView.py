@@ -1,12 +1,6 @@
 from kivy.properties import ListProperty
-from kivy.uix.widget import Widget
-from kivy.uix.dropdown import DropDown
-from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
-from kivy.clock import Clock
-from .ObservableTransform import ObservableTransform
-from .TransformObserver import TransformObserver
-from .ObservableCamera import ObservableCamera
+from ui.cam.ObservableCamera import ObservableCamera
 from typing import Union
 
 
@@ -23,10 +17,11 @@ class CameraSourceView(BoxLayout):
     def on_kv_post(self, base_widget):
         self.camera = ObservableCamera()
         # self.camera.bind(on_camera_frame=self.connect_preview)
-        self.camera.index = self.available_cam_ids[0]
-        self.camera.preview = self.ids['camera_preview']
-        self.fill_cam_dropdown()
-        self.ids['camera_selection'].select(self.available_cam_ids[0])
+        if len(self.available_cam_ids) > 0:
+            self.camera.index = self.available_cam_ids[0]
+            self.camera.preview = self.ids['camera_preview']
+            self.fill_cam_dropdown()
+            self.ids['camera_selection'].select(self.available_cam_ids[0])
 
     # def connect_preview(self, *args):
     #     if self.camera.texture is not None:

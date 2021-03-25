@@ -1,0 +1,54 @@
+<NodeView>:
+  height: '100px'
+  width: '100px'
+  size_hint: None, None
+
+  BoxLayout:
+    orientation: 'horizontal'
+    size_hint: 1, 1
+    canvas.before:
+      Color:
+        rgba: 0, 0, 0.6, 0.8
+      Rectangle:
+        size: self.size
+        pos: self.pos
+
+    NodeConnectionHandles:
+      id: sink_handles
+      connection_type: 'sink'
+
+    BoxLayout:
+      orientation: 'vertical'
+      size_hint: 1, 1
+
+      canvas.before:
+        Color:
+          rgba: 0.3, 0, 0, 0.3
+        Rectangle:
+          size: self.size
+          pos: self.pos
+
+    NodeConnectionHandles:
+      id: source_handles
+      connection_type: 'source'
+
+
+
+<NodeConnectionHandles>:
+  width: '22px'
+  padding: '0px'
+  size_hint: None, 1
+  orientation: 'vertical'
+
+<NodeConnectionHandle>:
+  width: '22px'
+  height: '22px'
+  size_hint: None, None
+  margin: 0
+  #on_press: root.start_connect_nodes(self)
+  #on_touch_up: root.end_connect_nodes()
+  text: '>'
+
+
+
+

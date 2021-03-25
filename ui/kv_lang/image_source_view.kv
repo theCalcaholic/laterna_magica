@@ -1,0 +1,36 @@
+<ImageSourceView>:
+
+#  DragLabel:
+#    size_hint: 1, 0.2
+#    text: 'Drag me'
+#    pos: 0, 1
+
+  orientation: 'vertical'
+  padding: '6px'
+  spacing: '2px'
+  height: '180px'
+  width: '100px'
+  size_hint: 0.2, 0.2
+
+  canvas.before:
+    Color:
+      rgba: 0, 0.2, 0, 0.5
+    Rectangle:
+      size: self.size
+      pos: self.pos
+
+  Label:
+    text: root.transform.name
+    font_size: 12
+    height: 20
+    size_hint: 1, None
+
+  Image:
+    id: preview
+    size_hint: 1, 1
+
+  TextInput:
+    size_hint: 1, None
+    height: '24px'
+    multiline: False
+    on_text_validate: root.try_load_image(self.text)
