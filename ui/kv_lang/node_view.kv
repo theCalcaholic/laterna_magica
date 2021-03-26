@@ -19,7 +19,6 @@
 
     BoxLayout:
       id: child_container
-      name: 'test'
       orientation: 'vertical'
       size_hint: 1, 1
 
@@ -30,11 +29,22 @@
           size: self.size
           pos: self.pos
 
-      Label:
-        text: root.name
+      EditLabel:
+        id: name_label
+        text: root.name_ro
         font_size: 12
         height: 20
         size_hint: 1, None
+        on_release: root.start_edit_name()
+
+      TextInput:
+        id: name_input
+        text: root.name_ro
+        font_size: 12
+        padding: 4, 1
+        height: 20
+        size_hint: 1, None
+        on_text: if root.validate_name(self.text): setattr(root.transform_view, 'name', self.text)
 
     NodeConnectionHandles:
       id: source_handles

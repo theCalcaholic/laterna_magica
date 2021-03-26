@@ -7,6 +7,10 @@ from array import array
 
 class ToggleablePreviewView(PreviewView):
 
+    def __init__(self, **kwargs):
+
+        super().__init__('preview', **kwargs)
+
     def on_kv_post(self, *args):
         self.bind(active=self.toggle_preview)
         super(ToggleablePreviewView, self).on_kv_post(*args)

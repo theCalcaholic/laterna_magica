@@ -46,11 +46,16 @@ class LinkedTransform(EventDispatcher):
 
     def receive_frame(self, source: 'LinkedTransform'):
         self.dispatch('on_frame_received', source)
-        frame = source.latest_frame
-        if self.transform_fn is not None:
-            frame = self.transform_fn(source.latest_frame)
+        frames = []
+        for s in self._sources:
+            frames.append(s.latest_frame)
+            if s.latest_frame is None:
+                return
 
-        self._frame = frame
+        if self.transform_fn is not None and len(self._sources) == len(self.input_channels):
+            self._frame = self.transform_fn(*frames)
+        elif len(self.input_channels) > 1:
+            return
 
         self.dispatch('on_frame_processed', self)
         for sink in self._sinks:

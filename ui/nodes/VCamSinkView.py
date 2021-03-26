@@ -7,9 +7,9 @@ from v4l2ctl import V4l2Capabilities
 
 class VCamSinkView(AbstractTransformNodeView, BoxLayout):
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, **kwargs):
         self.available_cameras = []
-        super().__init__(name, **kwargs)
+        super().__init__('virtual camera sink', **kwargs)
 
     def transform_init(self, name):
         self.transform = VCamSink(name)

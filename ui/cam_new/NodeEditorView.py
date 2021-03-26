@@ -24,8 +24,8 @@ class NodeEditorView(FloatLayout):
         self.ids['add_transform_dialog'].transform_options = self.transform_graph.TRANSFORM_TYPES.keys()
         self.ids['add_transform_dialog'].bind(on_add_transform=self.add_transform)
 
-    def add_transform(self, _, transform_type, name):
-        node = self.transform_graph.add(transform_type, name)
+    def add_transform(self, _, transform_type):
+        node = self.transform_graph.add(transform_type)
         self.nodes.append(node)
         self.add_widget(node)
         node.bind(on_start_connect_nodes=self.on_start_connect_nodes)

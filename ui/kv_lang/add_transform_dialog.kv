@@ -23,7 +23,7 @@
         pos: self.pos
   GridLayout:
     cols: 2
-    rows: 6
+    rows: 5
     spacing: 4
 
     Label:
@@ -33,17 +33,17 @@
     DropDownView:
       id: transform_type_dropdown
       size_hint: 1, 0.1
-    Label:
-      font_size: 12
-      size_hint: 1, 0.1
-      size: 1, 1
-      text: 'Name: '
-    TextInput:
-      height: '20px'
-      size_hint: 1, 0.1
-      id: name_input
-      multiline: False
-      on_text_validate: root.validate_name(None, name_input.text)
+#    Label:
+#      font_size: 12
+#      size_hint: 1, 0.1
+#      size: 1, 1
+#      text: 'Name: '
+#    TextInput:
+#      height: '20px'
+#      size_hint: 1, 0.1
+#      id: name_input
+#      multiline: False
+#      on_text_validate: root.validate_name(None, name_input.text)
     Button:
       size_hint: 1, 0.1
       size: 1, 1

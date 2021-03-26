@@ -7,9 +7,9 @@ from transforms.CameraSource import CameraSource
 
 class CameraSourceNode(AbstractTransformNodeView, BoxLayout):
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, **kwargs):
         self.available_cameras = []
-        super().__init__(name, **kwargs)
+        super().__init__('camera source', **kwargs)
 
     def transform_init(self, name):
         self.transform = CameraSource(name)

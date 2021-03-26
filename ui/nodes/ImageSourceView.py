@@ -15,11 +15,11 @@ import os
 class ImageSourceView(PreviewView, BoxLayout):
     img_uri = StringProperty(None)
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, **kwargs):
         self.img_uri = None
         self._popup = None
 
-        super().__init__(name, **kwargs)
+        super().__init__('image source', **kwargs)
 
     def transform_init(self, name):
         self.transform = SourceTransform(name)

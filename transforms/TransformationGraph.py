@@ -5,16 +5,18 @@ from ui.nodes.ToggleablePreviewView import ToggleablePreviewView
 from ui.nodes.CameraSourceView import CameraSourceNode
 from ui.nodes.VCamSinkView import VCamSinkView
 from ui.nodes.NodeView import NodeView
+from ui.nodes.CombineVideoView import CombineVideoView
 from typing import List
 
 
 class TransformationGraph:
 
     TRANSFORM_TYPES = {
-        'image': lambda name: ImageSourceView(name=name),
-        'preview': lambda name: ToggleablePreviewView(name=name),
-        'camera source': lambda name: CameraSourceNode(name=name),
-        'virtual camera sink': lambda name: VCamSinkView(name=name),
+        'image': lambda: ImageSourceView(),
+        'preview': lambda: ToggleablePreviewView(),
+        'camera source': lambda: CameraSourceNode(),
+        'virtual camera sink': lambda: VCamSinkView(),
+        'combine video': lambda: CombineVideoView()
     }
 
     camera_resolution = ListProperty([0, 0])
@@ -22,12 +24,12 @@ class TransformationGraph:
     def __init__(self):
         self.nodes: List[LinkedTransform] = []
 
-    def add(self, transform_type: str, name: str) -> NodeView:
-        if self.find_by_name(name) is not None:
-            raise ValueError(f'A transform with name {name} already exists')
+    def add(self, transform_type: str) -> NodeView:
+        # if self.find_by_name(name) is not None:
+        #     raise ValueError(f'A transform with name {name} already exists')
         if transform_type not in self.__class__.TRANSFORM_TYPES:
             raise ValueError(f'Transform type "{transform_type}" does not exist')
-        transform_view = self.__class__.TRANSFORM_TYPES[transform_type](name)
+        transform_view = self.__class__.TRANSFORM_TYPES[transform_type]()
         node_view = NodeView()
         node_view.add_transform_view(transform_view)
         self.nodes.append(transform_view.transform)

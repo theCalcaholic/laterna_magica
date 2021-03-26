@@ -22,6 +22,7 @@ class VCamSink(LinkedTransform):
         self.pool = futures.ThreadPoolExecutor()
         self.pool.submit(asyncio.run, self.stream())
         super().__init__(name, *args, **kwargs)
+        self.output_channels = []
 
     def load_vcam(self, *args):
 

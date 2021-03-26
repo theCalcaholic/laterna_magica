@@ -11,7 +11,7 @@ class AddTransformDialog(BoxLayout):
     __events__ = ('on_add_transform',)
 
     def __init__(self, **kwargs):
-        self.is_name_valid: Callable = lambda _: True
+        #self.is_name_valid: Callable = lambda _: True
         self._orig_parent = self.parent
         super().__init__(**kwargs)
 
@@ -32,20 +32,20 @@ class AddTransformDialog(BoxLayout):
             dropdown.select(self.transform_options[0])
 
     def confirm_dialog(self):
-        name = self.ids['name_input'].text
-        if not self.is_name_valid(name):
-            print('Invalid name!')
-            return
+        # name = self.ids['name_input'].text
+        # if not self.is_name_valid(name):
+        #    print('Invalid name!')
+        #    return
         transform_type = self.ids['transform_type_dropdown'].selection
         if transform_type is None:
             print('No node type selected!')
             return
         self.hide()
-        self.dispatch('on_add_transform', transform_type, name)
+        self.dispatch('on_add_transform', transform_type)
 
-    def validate_name(self, _, name):
-        if not self.is_name_valid(name):
-            print('Invalid name!')
+    # def validate_name(self, _, name):
+    #     if not self.is_name_valid(name):
+    #         print('Invalid name!')
 
     def on_add_transform(self, *args):
         pass
