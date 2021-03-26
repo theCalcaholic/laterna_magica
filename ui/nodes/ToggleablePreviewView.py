@@ -1,3 +1,4 @@
+from kivy.properties import BooleanProperty
 from kivy.graphics.texture import Texture
 from .PreviewView import PreviewView
 from transforms.LinkedTransform import LinkedTransform
@@ -6,6 +7,8 @@ from array import array
 
 
 class ToggleablePreviewView(PreviewView):
+
+    active = BooleanProperty(True)
 
     def __init__(self, **kwargs):
 

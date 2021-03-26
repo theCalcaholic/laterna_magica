@@ -18,7 +18,7 @@ class LinkedTransform(EventDispatcher):
         self._frame: Union[np.ndarray, None] = None
         self.input_channels = ['image']
         self.output_channels = ['image']
-        self.transform_fn: Union[Callable, None] = None
+        self.transform_fn: Union[Callable, None] = self.default_transform_fn
         super().__init__(*args, **kwargs)
 
     def attach_sink(self, sink: 'LinkedTransform'):
@@ -81,6 +81,12 @@ class LinkedTransform(EventDispatcher):
 
     def get_latest_frame(self):
         return self._frame
+
+    def default_transform_fn(self, *frames):
+        if len(frames) == 0:
+            return self._frame
+        else:
+            return frames[0]
 
     texture = property(get_texture)
     latest_frame = property(get_latest_frame)
