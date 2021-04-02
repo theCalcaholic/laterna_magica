@@ -13,13 +13,10 @@ class VCamSinkView(AbstractTransformNodeView, BoxLayout):
 
     def transform_init(self, name):
         self.transform = VCamSink(name)
-        self.available_cameras = CameraSource.find_available_cameras(V4l2Capabilities.VIDEO_OUTPUT)
+        self.available_cameras = CameraSource.find_available_cameras(capability=V4l2Capabilities.VIDEO_OUTPUT)
 
     def on_kv_post(self, *args):
-        for cam in self.available_cameras:
-            self.transform.vcam_id = cam
-            if self.transform._vcam is not None:
-                break
+        self.transform.vcam_id = self.available_cameras[0]
         self.fill_dropdown()
 
     def fill_dropdown(self):

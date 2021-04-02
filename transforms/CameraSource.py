@@ -19,13 +19,13 @@ class CameraSource(LinkedTransform):
     __events__ = ('on_camera_loaded',)
 
     @classmethod
-    def find_available_cameras(cls, max_id: int = 20, capabilitiy = V4l2Capabilities.VIDEO_CAPTURE) -> List[int]:
+    def find_available_cameras(cls, capability=V4l2Capabilities.VIDEO_CAPTURE) -> List[int]:
 
         print('listing v4l devices')
         devices = V4l2Device.iter_devices(skip_links=True)
         ids = []
         for device in devices:
-            if capabilitiy in device.capabilities:
+            if capability in device.capabilities:
                 ids.append(int(re.match(r'/dev/video(\d+)', str(device.device)).group(1)))
 
         # for cam_id in range(0, max_id):

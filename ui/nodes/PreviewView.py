@@ -11,4 +11,4 @@ class PreviewView(AbstractTransformNodeView, BoxLayout):
 
     def frame_received(self, instance: LinkedTransform, source: LinkedTransform):
         if 'preview' in self.ids:
-            self.ids['preview'].texture = source.texture
+            self.ids['preview'].texture = self.transform.texture

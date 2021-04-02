@@ -1,8 +1,7 @@
 from kivy.properties import NumericProperty, ObjectProperty
 from .LinkedTransform import LinkedTransform
-from pyfakewebcam.pyfakewebcam import FakeWebcam
+import pyvirtualcam
 from pathlib import Path
-from typing import Union
 import asyncio
 from concurrent import futures
 import cv2
@@ -13,20 +12,22 @@ class VCamSink(LinkedTransform):
     vcam_id = NumericProperty(-1)
     resolution = ObjectProperty()
 
+    __events__ = ('on_stream_stopped', 'on_stream_started')
+
     def __init__(self, name, *args, **kwargs):
-        self._vcam: Union[None, FakeWebcam] = None
-        self.fps = 25
-        self.bind(vcam_id=self.load_vcam)
-        self.bind(resolution=self.load_vcam)
-        self.running = True
-        self.pool = futures.ThreadPoolExecutor()
-        self.pool.submit(asyncio.run, self.stream())
+        self.fps = 25.0
+        self.bind(vcam_id=self.restart_stream)
+        self.bind(resolution=self.restart_stream)
+        self.running = False
+        self.restart_scheduled = False
         super().__init__(name, *args, **kwargs)
         self.output_channels = []
 
-    def load_vcam(self, *args):
+    def restart_stream(self, *args):
 
-        print(f'Loading vcam {self.vcam_id}')
+        print(self.vcam_id)
+        print(self.resolution)
+
         if self.vcam_id == -1 or not Path(f'/dev/video{self.vcam_id}').exists():
             print(f"Could not load camera /dev/video/{self.vcam_id}: File does not exist")
             return
@@ -35,24 +36,47 @@ class VCamSink(LinkedTransform):
             print(f"Could not load camera /dev/video/{self.vcam_id}: Did not yet receive a resolution")
             return
 
-        try:
-            self._vcam = FakeWebcam(f'/dev/video{self.vcam_id}', *self.resolution)
-        except Exception as e:
-            print(f"Could not load camera /dev/video/{self.vcam_id} due to an unexpected error: {e}")
-            return
+        if self.running:
+            self.restart_scheduled = True
+            self.stop_stream()
+        else:
+            with futures.ThreadPoolExecutor(max_workers=1) as pool:
+                pool.submit(asyncio.run, self.stream())
 
-        print("virt cam is set up")
+    def stop_stream(self):
+
+        self.running = False
 
     async def stream(self):
-        while self.running:
-            if self._vcam is not None and len(self._sources) > 0:
-                #print('publishing frame')
+        self.dispatch('on_stream_started')
+        self.running = True
+        try:
+            print(f'Loading vcam /dev/video{self.vcam_id}')
+            cam = pyvirtualcam.Camera(width=self.resolution[0], height=self.resolution[1], fps=self.fps,
+                                      device=f'/dev/video{self.vcam_id}')
+        except Exception as e:
+            print(e)
+            raise e
+        with cam:
+            print(self.running)
+            print(len(self._sources))
+            while self.running and len(self._sources) > 0:
                 frame = cv2.cvtColor(list(self._sources)[0].latest_frame, cv2.COLOR_BGR2RGB)
-                self._vcam.schedule_frame(frame)
-            await asyncio.sleep(1.0/self.fps)
-            #print(f'res: {self.resolution}, vcam_id: {self.vcam_id}, sources: {len(self._sources)}, vcam: {self._vcam}')
+                cam.send(frame)
+                cam.sleep_until_next_frame()
+        print('stream terminated')
+        self.dispatch('on_stream_stopped')
 
     def on_frame_received(self, source: 'LinkedTransform'):
         if source.latest_frame is None:
             return
-        self.resolution = source.latest_frame.shape[:2]
+        self.resolution = (source.latest_frame.shape[1], source.latest_frame.shape[0])
+
+    def on_stream_started(self):
+        print('stream started')
+
+    def on_stream_stopped(self):
+        print('stream stopped')
+        if self.restart_scheduled:
+            self.restart_scheduled = False
+            self.start_stream()

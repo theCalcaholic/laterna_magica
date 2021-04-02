@@ -1,19 +1,20 @@
 from kivy.uix.boxlayout import BoxLayout
 from transforms.LinkedTransform import LinkedTransform
 from .AbstractTransformNodeView import AbstractTransformNodeView
+from .PreviewView import PreviewView
 import numpy as np
 import cv2
 
 
-class CombineVideoView(AbstractTransformNodeView, BoxLayout):
+class VideoOverlayView(PreviewView, BoxLayout):
 
     def __init__(self, **kwargs):
         super().__init__('combine videos', **kwargs)
 
     def transform_init(self, name):
-        self.transform = LinkedTransform(name)
+        super(VideoOverlayView, self).transform_init(name)
         self.transform.input_channels = ['image', 'image']
-        self.transform.transform_fn = CombineVideoView.combine_fn
+        self.transform.transform_fn = VideoOverlayView.combine_fn
 
         # self.transform.bind(on_frame_received=self.on_frame_received)
 
@@ -60,18 +61,19 @@ class CombineVideoView(AbstractTransformNodeView, BoxLayout):
 
         new_shape = [max(dimensions_0[0], dimensions_1[0]), max(dimensions_0[1], dimensions_1[1])]
         new_shape.extend(dimensions_0[2:])
-        new_frame = np.zeros(tuple(new_shape))
-        print(new_shape)
-        print(frame_0_left_bottom)
-        print(frame_0_right_top)
-        print(new_frame.shape)
-        new_frame[frame_0_left_bottom[0]:frame_0_right_top[0], frame_0_left_bottom[1]:frame_0_right_top[1]] = frame_0
-        # new_frame[
-        #     frame_1_left_bottom[0]:frame_1_right_top[0],
-        #     frame_1_left_bottom[1]:frame_1_right_top[1]
-        # ] = frame_1
-
-        cv2.imshow('debug', new_frame)
+        new_frame = np.zeros(tuple(new_shape), np.uint8)
+        # print(new_shape)
+        # print(frame_0_left_bottom)
+        # print(frame_0_right_top)
+        # print(new_frame.shape)
+        new_frame[
+            frame_0_left_bottom[0]:frame_0_right_top[0],
+            frame_0_left_bottom[1]:frame_0_right_top[1]
+        ] = frame_0
+        new_frame[
+            frame_1_left_bottom[0]:frame_1_right_top[0],
+            frame_1_left_bottom[1]:frame_1_right_top[1]
+        ] = frame_1
 
         return new_frame
 

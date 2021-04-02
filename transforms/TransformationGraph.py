@@ -5,7 +5,7 @@ from ui.nodes.ToggleablePreviewView import ToggleablePreviewView
 from ui.nodes.CameraSourceView import CameraSourceNode
 from ui.nodes.VCamSinkView import VCamSinkView
 from ui.nodes.NodeView import NodeView
-from ui.nodes.CombineVideoView import CombineVideoView
+from ui.nodes.VideoOverlayView import VideoOverlayView
 from typing import List
 
 
@@ -16,7 +16,7 @@ class TransformationGraph:
         'preview': lambda: ToggleablePreviewView(),
         'camera source': lambda: CameraSourceNode(),
         'virtual camera sink': lambda: VCamSinkView(),
-        'combine video': lambda: CombineVideoView()
+        'overlay': lambda: VideoOverlayView()
     }
 
     camera_resolution = ListProperty([0, 0])
